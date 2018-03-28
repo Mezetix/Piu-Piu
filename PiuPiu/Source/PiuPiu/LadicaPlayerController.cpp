@@ -4,4 +4,8 @@
 
 
 
+void ALadicaPlayerController::MoveUp()
+{
 
+
+}

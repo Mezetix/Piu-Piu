@@ -9,12 +9,18 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta=(BlueprintSpawnableComponent))
 class PIUPIU_API ALadicaPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public: 
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void MoveUp();
 	
-	
-	
+protected:
+	UPROPERTY(EditAnywhere, Category = "Setup") // verjetnu EditDefaultsOnly
+
+		float SideSpeed = 5.0f;
 };

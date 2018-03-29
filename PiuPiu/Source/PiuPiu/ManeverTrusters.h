@@ -6,6 +6,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "ManeverTrusters.generated.h"
 
+
+class ALadicaBase;
+
 /**
  * 
  */
@@ -14,17 +17,26 @@ class PIUPIU_API UManeverTrusters : public UStaticMeshComponent
 {
 	GENERATED_BODY()
 	
+private:
+
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+
+	
 
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Movment")
-		void MoveUp(float value);
+		void MoveUp(float value, UPrimitiveComponent* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
-		void MoveRight(float value);
+		void MoveRight(float value, UPrimitiveComponent* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
-		void MoveFront(float value);
+		void MoveFront(float value, UPrimitiveComponent* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
-		void PitchUp(float value);
+		void PitchUp(float value, UPrimitiveComponent* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void RollRight(float value);
 	UFUNCTION(BlueprintCallable, Category = "Movment")

@@ -15,9 +15,15 @@ public:
 	// Sets default values for this pawn's properties
 	ALadicaBase();
 
+
+private:
+
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	ALadicaBase* GetLadica() { return this; }
 
 public:	
 	// Called every frame

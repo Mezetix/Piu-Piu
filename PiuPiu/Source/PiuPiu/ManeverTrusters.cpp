@@ -17,13 +17,13 @@ void UManeverTrusters::BeginPlay()
 
 void UManeverTrusters::MoveUp(float value, UPrimitiveComponent* Ladica)
 {
-
+	//TODO FIXME
 	
 //	UE_LOG(LogTemp, Warning, TEXT(" Trusters going up at %f"), value);
 	auto ForceAplied = GetUpVector() * value * MaxSideForce;
-	auto ForceLocation = GetComponentLocation();
-	if (!Ladica) { return; };
-	Ladica->AddForceAtLocation(ForceAplied, ForceLocation);
+	//auto ForceLocation = GetComponentLocation();
+	
+	Ladica->AddForce(ForceAplied);
 }
 
 void UManeverTrusters::MoveRight(float value, UPrimitiveComponent* Ladica)
@@ -31,7 +31,7 @@ void UManeverTrusters::MoveRight(float value, UPrimitiveComponent* Ladica)
 	
 	auto ForceAplied = GetRightVector() * value * MaxSideForce;
 	//auto ForceLocation = GetComponentLocation();
-	if (!Ladica) { return; };
+	
 	Ladica->AddForce(ForceAplied);
 }
 
@@ -41,8 +41,8 @@ void UManeverTrusters::MoveFront(float value, UPrimitiveComponent* Ladica)
 {
 
 	auto ForceAplied = GetForwardVector() * value * MaxSideForce;
-	auto ForceLocation = GetComponentLocation();
-	if (!Ladica) { return; };
+	//auto ForceLocation = GetComponentLocation();
+	
 	Ladica->AddForce(ForceAplied);
 	
 }

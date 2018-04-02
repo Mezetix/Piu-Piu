@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "LadicaPlayerController.generated.h"
 
+
+class ALadicaBase;
 /**
  * 
  */
@@ -16,11 +18,22 @@ class PIUPIU_API ALadicaPlayerController : public APlayerController
 	
 public: 
 
-	UFUNCTION(BlueprintCallable, Category = "Movment")
-		void MoveUp();
+	
 	
 protected:
-	UPROPERTY(EditAnywhere, Category = "Setup") // verjetnu EditDefaultsOnly
 
+
+
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+	
+	ALadicaBase* GetControledLadica()const;
+
+	UPROPERTY(EditAnywhere, Category = "Setup") // verjetnu EditDefaultsOnly
 		float SideSpeed = 5.0f;
+
+private:
+	// raycast skozi piko na zaslovu u svet - in kaj trofne... vsak tick
+	void AimTowordsCrosshair();
+
 };

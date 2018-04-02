@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Pawn.h"
 #include "LadicaBase.generated.h"
+
+class AProjectile;
 
 UCLASS()
 class PIUPIU_API ALadicaBase : public APawn
@@ -18,10 +21,14 @@ public:
 
 private:
 
+
+
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	
 
 	ALadicaBase* GetLadica() { return this; }
 
@@ -32,6 +39,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		TSubclassOf<AProjectile> ProjectileBlueprint;
+		//float ProjectileSpeed = 1000.0f;
 	
 };

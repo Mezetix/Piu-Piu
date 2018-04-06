@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "GameFramework/Pawn.h"
 #include "LadicaBase.generated.h"
 
+class UDeffGun;
 class AProjectile;
 
 UCLASS()
@@ -21,14 +21,24 @@ public:
 
 private:
 
+	//Local reference of the guns - rabmo za strelanje
+	UDeffGun * DefGunLeft = nullptr;
+	UDeffGun * DefGunRight = nullptr;
 
+	
 
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	
+
+	// Must call in constructor
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void SetupGuns(UDeffGun* GunLeft, UDeffGun* GunRight);
+
+
+
 
 	ALadicaBase* GetLadica() { return this; }
 
@@ -39,8 +49,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Fire")
+	void Fire();
+
+
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		TSubclassOf<AProjectile> ProjectileBlueprint;
-		//float ProjectileSpeed = 1000.0f;
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		float ProjectileSpeed = 1000.0f;
 	
 };

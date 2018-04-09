@@ -37,10 +37,11 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetupGuns(UDeffGun* GunLeft, UDeffGun* GunRight);
 
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		ALadicaBase* GetLadica() { return this; }
 
 
-
-	ALadicaBase* GetLadica() { return this; }
+	
 
 public:	
 	// Called every frame

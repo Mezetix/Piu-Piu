@@ -21,10 +21,11 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-		float ProjectileSpeed = 1000.0f;
+		float ProjectileSpeed = 40000.0f;
 
 
-	
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		float GetProjectileSpeed();
 
 private:
 	//

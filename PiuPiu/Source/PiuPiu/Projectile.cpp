@@ -22,6 +22,11 @@ void AProjectile::BeginPlay()
 	
 }
 
+float AProjectile::GetProjectileSpeed()
+{
+	return ProjectileSpeed;
+}
+
 void AProjectile::LaunchProjectile(float Speed)
 {
 

@@ -9,3 +9,5 @@ Kontrole:
 1. Q,E, Up, Down, Left, Right - Rotacija u 6 axis
 1. Mouse look
 1. left click - fire
+1. Mouse wheel - Main thrusters - Page Up/Down - max
+1. num +,- step throttle

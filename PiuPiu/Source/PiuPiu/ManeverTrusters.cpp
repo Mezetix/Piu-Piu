@@ -66,3 +66,8 @@ void UManeverTrusters::RollRight(float value)
 void UManeverTrusters::YawRight(float value)
 {
 }
+
+float UManeverTrusters::GetMaxSideRotation()
+{
+	return MaxSideRotation;
+}

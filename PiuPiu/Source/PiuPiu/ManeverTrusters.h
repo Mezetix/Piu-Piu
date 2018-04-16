@@ -48,6 +48,9 @@ public:
 	// SideRotations in  ne vem... Readianih?
 	UPROPERTY(EditDefaultsOnly)
 		float MaxSideRotation = 1.1f;
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+		float GetMaxSideRotation();
 	
 	
 };

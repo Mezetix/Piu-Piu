@@ -55,7 +55,7 @@ public:
 	
 private:
 
-	void ThrustTick(float DeltaTime);
+
 
 
 };

@@ -29,6 +29,10 @@ protected:
 
 public:
 
+
+	void ManeverTrusters();
+
+
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void MoveUp(float value, UPrimitiveComponent* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
@@ -38,16 +42,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void PitchUp(float value, UPrimitiveComponent* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void PitchUpAI(float value, APawn* Ladica);
+	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void RollRight(float value);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void RollRightAI(float value, APawn* Ladica);
+	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void YawRight(float value);
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void YawRightAI(float value, APawn* Ladica);
 
 	// force in newtons  - tone * 10
 	UPROPERTY(EditDefaultsOnly)
 		float MaxSideForce = 5000.0f;
 	// SideRotations in  ne vem... Readianih?
 	UPROPERTY(EditDefaultsOnly)
-		float MaxSideRotation = 1.1f;
+		float MaxSideRotation = 30.0f;
 
 	UFUNCTION(BlueprintCallable, Category = "Getter")
 		float GetMaxSideRotation();

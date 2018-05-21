@@ -19,7 +19,7 @@ class PIUPIU_API UChooseNextWaypoint : public UBTTaskNode
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "BlackBoard")
-		 struct FBlackboardKeySelector IndexKey;
+		struct FBlackboardKeySelector IndexKey;
 
 	UPROPERTY(EditAnywhere, Category = "Blackboard")
 		struct FBlackboardKeySelector WaypointKey;

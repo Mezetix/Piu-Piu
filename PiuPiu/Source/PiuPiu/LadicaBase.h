@@ -8,6 +8,7 @@
 
 class UDeffGun;
 class AProjectile;
+class UManeverTrusters;
 
 UCLASS()
 class PIUPIU_API ALadicaBase : public APawn
@@ -25,6 +26,13 @@ private:
 	UDeffGun * DefGunLeft = nullptr;
 	UDeffGun * DefGunRight = nullptr;
 
+
+	// za AI za obracat
+	UManeverTrusters* ManeverThrusters = nullptr;
+
+	// Za obraèanje u AI
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		float MaxDegreesPerSecond = 20;
 	
 
 	
@@ -36,6 +44,9 @@ protected:
 	// Must call in constructor
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetupGuns(UDeffGun* GunLeft, UDeffGun* GunRight);
+
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		void SetupManeverThrusters(UManeverTrusters* ManeverThrust);
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		ALadicaBase* GetLadica() { return this; }
@@ -52,6 +63,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Fire")
 	void Fire();
+
+	void TurnTowards(FVector TurnDirection);
 
 
 	UPROPERTY(EditAnywhere, Category = "Setup")

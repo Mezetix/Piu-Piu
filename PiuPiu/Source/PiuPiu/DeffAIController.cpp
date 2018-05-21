@@ -8,8 +8,8 @@ void ADeffAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto ControledLadica = GetControledLadica();
-	auto PlayerLadica = GetPlayerLadja();
+	ControledLadica = GetControledLadica();
+	PlayerLadica = GetPlayerLadja();
 
 	if(!PlayerLadica & !ControledLadica)
 	{
@@ -22,6 +22,13 @@ void ADeffAIController::BeginPlay()
 
 	
 	
+}
+
+void ADeffAIController::Tick(float DeltaTime)
+{
+	
+	Super::Tick(DeltaTime);
+
 }
 
 ALadicaBase * ADeffAIController::GetControledLadica()const

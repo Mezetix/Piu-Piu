@@ -19,14 +19,14 @@ void UMainThrusters::ThrustMax(UPrimitiveComponent * Ladica)
 	
 	CurrentThrust = MaxThrustersForce;
 
-	UE_LOG(LogTemp, Warning, TEXT(" Thrustin forward at Max"));
+
 }
 
 void UMainThrusters::ThrustStop(UPrimitiveComponent * Ladica)
 {
 
 	CurrentThrust = 0.0f;
-	UE_LOG(LogTemp, Warning, TEXT(" Thrustin set to stop"));
+	
 
 }
 
@@ -39,7 +39,7 @@ void UMainThrusters::ThrustUpStep(UPrimitiveComponent * Ladica)
 		CurrentThrust = MaxThrustersForce;
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT(" Thrust up a step... Thrust at %f"), CurrentThrust);
+	
 
 }
 
@@ -51,7 +51,7 @@ void UMainThrusters::ThrustDownStep(UPrimitiveComponent * Ladica)
 		CurrentThrust = 0.0f;
 	}
 	
-	UE_LOG(LogTemp, Warning, TEXT(" Thrust down a step... Thrust at %f"), CurrentThrust);
+	
 
 }
 

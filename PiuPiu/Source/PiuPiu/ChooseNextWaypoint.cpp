@@ -8,6 +8,7 @@
 EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
 
+	UE_LOG(LogTemp, Warning, TEXT("V exequte task smo"));
 	
 	// get Patrol route
 	auto ControledPawn = OwnerComp.GetAIOwner()->GetPawn();
@@ -21,18 +22,27 @@ EBTNodeResult::Type UChooseNextWaypoint::ExecuteTask(UBehaviorTreeComponent & Ow
 		return  EBTNodeResult::Failed;
 	}
 	
-	//UE_LOG(LogTemp, Warning, TEXT("Ime ownerja od ai beh tree %s"), *(tmp1->GetName()));
+	
 
 
 	// Set next waypoint
 	auto BlacboardComp = OwnerComp.GetBlackboardComponent();
 	auto index = BlacboardComp->GetValueAsInt(IndexKey.SelectedKeyName);
-	BlacboardComp->SetValueAsObject(WaypointKey.SelectedKeyName, PatrolPoints[index]);
 	
+	BlacboardComp->SetValueAsObject(WaypointKey.SelectedKeyName, PatrolPoints[index]);
+
+
+	UE_LOG(LogTemp, Warning, TEXT("Index št. %i"), index);
 	// Cycle the index
-	auto NextIndex = (index + 1) % PatrolPoints.Num();
+
+	auto NextIndex = (index + 1) % (PatrolPoints.Num());
+	
+	UE_LOG(LogTemp, Warning, TEXT("Next index= %i"), NextIndex);
+	
+	
 	BlacboardComp->SetValueAsInt(IndexKey.SelectedKeyName, NextIndex);
 
+	
 	//UE_LOG(LogTemp, Warning, TEXT("Waypoint index %i"), index);
 	return EBTNodeResult::Succeeded;
 }

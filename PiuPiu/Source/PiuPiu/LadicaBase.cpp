@@ -4,16 +4,22 @@
 #include "DeffGun.h"
 #include "Projectile.h"
 #include "ManeverTrusters.h"
+#include "ManevertThrust.h"
+#include "MainThrusters.h"
+#include "Components/StaticMeshComponent.h"
+
 // Sets default values
 ALadicaBase::ALadicaBase()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	
-	
-}
 
+	LadicaManeverThrustComponent = CreateDefaultSubobject<UManevertThrust>(FName("ManeverThrust"));
+	LadicaManeverThrustComponent->SetupThrusters(this);
+	LadicaMainThrusters = CreateDefaultSubobject<UMainThrusters>(FName("MainThrusters"));
+	LadicaMainThrusters->SetupMainThrusters(this);
+}
 
 // Called when the game starts or when spawned
 void ALadicaBase::BeginPlay()
@@ -30,6 +36,14 @@ void ALadicaBase::SetupGuns(UDeffGun* GunLeft, UDeffGun* GunRight)
 	UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - setting up the guns"), *(this->GetName()));
 }
 
+void ALadicaBase::SetupLadica(UStaticMeshComponent * ladica)
+{
+	LadicaMesh = ladica;
+	LadicaManeverThrustComponent->SetUpMesh(ladica);
+
+	UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - setting up LadicaMesh, LadicaManeverThrustComponent"), *(this->GetName()));
+}
+
 void ALadicaBase::SetupManeverThrusters(UManeverTrusters * ManeverThrust)
 {
 	ManeverThrusters = ManeverThrust;
@@ -37,11 +51,58 @@ void ALadicaBase::SetupManeverThrusters(UManeverTrusters * ManeverThrust)
 	UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - setting up Manever Thrusters"), *(this->GetName()));
 }
 
+void ALadicaBase::MoveUpBase(float value)
+{
+	if (!LadicaManeverThrustComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		return;
+	}
+	LadicaManeverThrustComponent->MoveUp(value);
+}
+
+void ALadicaBase::MoveRightBase(float value)
+{
+	if (!LadicaManeverThrustComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		return;
+	}
+	LadicaManeverThrustComponent->MoveRight(value);
+}
+
+void ALadicaBase::MoveFrontBase(float value)
+{
+	if (!LadicaManeverThrustComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		return;
+	}
+	LadicaManeverThrustComponent->MoveFront(value);
+}
+
+void ALadicaBase::PitchUpBase(float value)
+{
+	if (!LadicaManeverThrustComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		return;
+	}
+	LadicaManeverThrustComponent->PitchUp(value);
+}
+
 // Called every frame
 void ALadicaBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (LadicaMainThrusters)
+	{
+		LadicaMainThrusters->Thrust(DeltaTime);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaMainThrusters je null u ticku"), *(this->GetName()));
+	}
 }
 
 // Called to bind functionality to input
@@ -83,14 +144,6 @@ void ALadicaBase::Fire()
 
 void ALadicaBase::TurnTowards(FVector TurnDirection)
 {
-
-	//UE_LOG(LogTemp, Warning, TEXT(" %s izvaja Turn Towars "), *(this->GetName()));
-
-
-	// Work-out difference between current barrel roation, and AimDirection
-
-	
-
 	
 	auto ladica = Cast<APawn>(this);
 	//auto ladica = this->GetAllChildActors(otroc);
@@ -111,9 +164,22 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 	
 	auto TarcaAsRotator = PozTarceLocal.Rotation(); // Rotacija kjer se nahaja tarca
 	
-	auto DeltaRotator = TarcaAsRotator - LadicaForwardRot; // rotacija ki je potrebna da se obrnes proti tarci
-
 	
+	auto DeltaRotator = TarcaAsRotator - LadicaForwardRot; // rotacija ki je potrebna da se obrnes proti tarci
+	
+	
+	
+	
+	if((FGenericPlatformMath::Abs(DeltaRotator.Yaw)) >180)
+	{
+		DeltaRotator.Yaw = -DeltaRotator.Yaw; 
+	}
+
+
+	if ((FGenericPlatformMath::Abs(DeltaRotator.Pitch)) >90)
+	{
+		DeltaRotator.Yaw = -DeltaRotator.Pitch;
+	}
 
 	float RelativePitch = FMath::Clamp<float>(DeltaRotator.Pitch, -1, +1); // pitch ki je potreben  -- TODO Clamp bi lohk bil u samem manever thrusterju
 	float RelativeYaw = FMath::Clamp<float>(DeltaRotator.Yaw, -1, +1); // yaw ki je potreben 
@@ -121,13 +187,14 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 
 
 	// Manever thrusters
-	if (ManeverThrusters)
+	if (LadicaManeverThrustComponent)
 	{
 		
-		
-		ManeverThrusters->PitchUpAI(RelativePitch, ladica);
+		LadicaManeverThrustComponent->PitchUp(RelativePitch);
+		LadicaManeverThrustComponent->YawRight(RelativeYaw);
+		/*ManeverThrusters->PitchUpAI(RelativePitch, ladica);
 		ManeverThrusters->YawRightAI(RelativeYaw, ladica);
-		ManeverThrusters->RollRightAI(RelativeRoll, ladica);
+		ManeverThrusters->RollRightAI(RelativeRoll, ladica);*/
 	}
 	else
 	{
@@ -138,5 +205,25 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 	
 	
  
+}
+
+UStaticMeshComponent * ALadicaBase::GetLadicaMesh()
+{
+	
+	if (!LadicaMesh)
+	{
+		return nullptr;
+	}
+	return LadicaMesh;
+}
+
+void ALadicaBase::Yaw(float value)
+{
+	if (!LadicaManeverThrustComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ladica::Yaw nima thrustersov n vem zakaj"), *(this->GetName()));
+		return;
+	}
+	LadicaManeverThrustComponent->YawRight(value);
 }
 

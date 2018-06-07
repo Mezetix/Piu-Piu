@@ -39,18 +39,21 @@ public:
 		void MoveRight(float value, UPrimitiveComponent* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void MoveFront(float value, UPrimitiveComponent* Ladica);
-	UFUNCTION(BlueprintCallable, Category = "Movment")
-		void PitchUp(float value, UPrimitiveComponent* Ladica);
+	//UFUNCTION(BlueprintCallable, Category = "Movment")
+	//	void PitchUp(float value, UPrimitiveComponent* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void PitchUpAI(float value, APawn* Ladica);
-	UFUNCTION(BlueprintCallable, Category = "Movment")
-		void RollRight(float value);
+	//UFUNCTION(BlueprintCallable, Category = "Movment")
+	//	void RollRight(float value);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void RollRightAI(float value, APawn* Ladica);
-	UFUNCTION(BlueprintCallable, Category = "Movment")
-		void YawRight(float value);
+	//UFUNCTION(BlueprintCallable, Category = "Movment")
+	//	void YawRight(float value, ALadicaBase* Ladica);
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void YawRightAI(float value, APawn* Ladica);
+
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		APawn* GetLadicaPawn();
 
 	// force in newtons  - tone * 10
 	UPROPERTY(EditDefaultsOnly)

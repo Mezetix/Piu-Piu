@@ -26,10 +26,10 @@ void UManeverTrusters::MoveUp(float value, UPrimitiveComponent* Ladica)
 	//TODO FIXME
 	
 //	UE_LOG(LogTemp, Warning, TEXT(" Trusters going up at %f"), value);
-	auto ForceAplied = GetUpVector() * value * MaxSideForce;
+	//auto ForceAplied = GetUpVector() * value * MaxSideForce;
 	//auto ForceLocation = GetComponentLocation();
 	
-	Ladica->AddForce(ForceAplied);
+	//Ladica->AddForce(ForceAplied);
 }
 
 void UManeverTrusters::MoveRight(float value, UPrimitiveComponent* Ladica)
@@ -54,16 +54,16 @@ void UManeverTrusters::MoveFront(float value, UPrimitiveComponent* Ladica)
 }
 
 //	TODO premakni kodo za rotacijo sm... lepši gre... sam bo treba pogruntat neko smoth varanto... da ni tolk robotsko
-void UManeverTrusters::PitchUp(float value, UPrimitiveComponent* Ladica)
-{
-	//UE_LOG(LogTemp, Warning, TEXT(" %s Pitching up at %f"), *(Ladica->GetName()), value);
-	auto PitchAngle = GetComponentRotation();
-	PitchAngle.Add(value*MaxSideRotation* GetWorld()->GetDeltaSeconds(), 0.0f, 0.0f);
-		
-	
-	
-	Ladica->AddLocalRotation(PitchAngle);
-}
+//void UManeverTrusters::PitchUp(float value, UPrimitiveComponent* Ladica)
+//{
+//	//UE_LOG(LogTemp, Warning, TEXT(" %s Pitching up at %f"), *(Ladica->GetName()), value);
+//	auto PitchAngle = GetComponentRotation();
+//	PitchAngle.Add(value*MaxSideRotation* GetWorld()->GetDeltaSeconds(), 0.0f, 0.0f);
+//		
+//	
+//	
+//	Ladica->AddLocalRotation(PitchAngle);
+//}
 
 
 void UManeverTrusters::PitchUpAI(float value, APawn* Ladica)
@@ -80,9 +80,9 @@ void UManeverTrusters::PitchUpAI(float value, APawn* Ladica)
 }
 
 
-void UManeverTrusters::RollRight(float value)
-{
-}
+//void UManeverTrusters::RollRight(float value)
+//{
+//}
 void UManeverTrusters::RollRightAI(float value, APawn* Ladica)
 {
 	FRotator rotation;
@@ -92,9 +92,15 @@ void UManeverTrusters::RollRightAI(float value, APawn* Ladica)
 	rotation.Roll = value * MaxSideRotation * GetWorld()->GetDeltaSeconds();
 	Ladica->AddActorLocalRotation(rotation);
 }
-void UManeverTrusters::YawRight(float value)
-{
-}
+//void UManeverTrusters::YawRight(float value, ALadicaBase* Ladica )
+//{
+//	FRotator rotation;
+//
+//	rotation.Pitch = 0.0f;
+//	rotation.Yaw = value * MaxSideRotation * GetWorld()->GetDeltaSeconds();
+//	rotation.Roll = 0.0f;
+//	Ladica->AddActorLocalRotation(rotation);
+//}
 void UManeverTrusters::YawRightAI(float value, APawn* Ladica)
 {
 	FRotator rotation;
@@ -104,6 +110,11 @@ void UManeverTrusters::YawRightAI(float value, APawn* Ladica)
 	rotation.Roll = 0.0f;
 	Ladica->AddActorLocalRotation(rotation);
 	
+}
+
+APawn * UManeverTrusters::GetLadicaPawn()
+{
+	return Cast<APawn>( this->GetAttachmentRoot());
 }
 
 float UManeverTrusters::GetMaxSideRotation()

@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "MainThrusters.generated.h"
 
+class ALadicaBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PIUPIU_API UMainThrusters : public UActorComponent
@@ -15,7 +16,8 @@ class PIUPIU_API UMainThrusters : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UMainThrusters();
-
+// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void ThrustMax(UPrimitiveComponent* Ladica);
@@ -32,9 +34,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		float GetCurrentThrust();
 
+	void Thrust(float DeltaTime);
+	void SetupMainThrusters(ALadicaBase* LadicaBase);
+
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -47,15 +55,9 @@ protected:
 		float CurrentThrust = 0.0f;
 
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
-	
 private:
 
-
+	ALadicaBase * Ladica = nullptr;
 
 
 };

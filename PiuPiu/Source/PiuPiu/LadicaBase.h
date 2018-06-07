@@ -9,6 +9,8 @@
 class UDeffGun;
 class AProjectile;
 class UManeverTrusters;
+class UManevertThrust;
+class UMainThrusters;
 
 UCLASS()
 class PIUPIU_API ALadicaBase : public APawn
@@ -35,15 +37,23 @@ private:
 		float MaxDegreesPerSecond = 20;
 	
 
+	UStaticMeshComponent* LadicaMesh;
+
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 
+	UManevertThrust* LadicaManeverThrustComponent = nullptr;
+	UMainThrusters* LadicaMainThrusters = nullptr;
+
 	// Must call in constructor
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetupGuns(UDeffGun* GunLeft, UDeffGun* GunRight);
+
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		void SetupLadica(UStaticMeshComponent* ladica);
 
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		void SetupManeverThrusters(UManeverTrusters* ManeverThrust);
@@ -51,8 +61,17 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		ALadicaBase* GetLadica() { return this; }
 
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void MoveUpBase(float value);
 
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void MoveRightBase(float value);
 	
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void MoveFrontBase(float value);
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void PitchUpBase(float value);
 
 public:	
 	// Called every frame
@@ -66,6 +85,11 @@ public:
 
 	void TurnTowards(FVector TurnDirection);
 
+	// vrne MeshComponent od ladice
+	UStaticMeshComponent* GetLadicaMesh();
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+		void Yaw(float value);
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		TSubclassOf<AProjectile> ProjectileBlueprint;

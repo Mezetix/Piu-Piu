@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MainThrusters.h"
-
+#include "LadicaBase.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values for this component's properties
 UMainThrusters::UMainThrusters()
@@ -60,6 +61,32 @@ float UMainThrusters::GetCurrentThrust()
 	return CurrentThrust;
 }
 
+void UMainThrusters::Thrust(float DeltaTime)
+{
+	if (!(Ladica->GetLadicaMesh()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Ladica->GetLadicaMesh() = null"), *(this->GetName()));
+		return;
+	}
+	auto LadicaMesh = Ladica->GetLadicaMesh();
+	if (!LadicaMesh)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" LadicaMesh je null MainThrusters"), *(this->GetName()));
+		return;
+	}
+	
+
+
+	if (CurrentThrust > 0)
+	{
+		FVector fowVec = LadicaMesh->GetForwardVector();
+		FVector FotceToAdd = fowVec * CurrentThrust  * DeltaTime;
+
+		LadicaMesh->AddForce(FotceToAdd);
+	}
+
+}
+
 // Called when the game starts
 void UMainThrusters::BeginPlay()
 {
@@ -67,6 +94,14 @@ void UMainThrusters::BeginPlay()
 
 	// ...
 	
+}
+
+void UMainThrusters::SetupMainThrusters(ALadicaBase * LadicaBase)
+{
+
+	Ladica = LadicaBase;
+
+
 }
 
 

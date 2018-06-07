@@ -34,7 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		float GetCurrentThrust();
 
-	void Thrust(float DeltaTime);
+	void Thrust();
 	void SetupMainThrusters(ALadicaBase* LadicaBase);
 
 

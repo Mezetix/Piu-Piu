@@ -61,7 +61,7 @@ float UMainThrusters::GetCurrentThrust()
 	return CurrentThrust;
 }
 
-void UMainThrusters::Thrust(float DeltaTime)
+void UMainThrusters::Thrust()
 {
 	if (!(Ladica->GetLadicaMesh()))
 	{
@@ -80,7 +80,7 @@ void UMainThrusters::Thrust(float DeltaTime)
 	if (CurrentThrust > 0)
 	{
 		FVector fowVec = LadicaMesh->GetForwardVector();
-		FVector FotceToAdd = fowVec * CurrentThrust  * DeltaTime;
+		FVector FotceToAdd = fowVec * CurrentThrust  * GetWorld()->GetDeltaSeconds();
 
 		LadicaMesh->AddForce(FotceToAdd);
 	}

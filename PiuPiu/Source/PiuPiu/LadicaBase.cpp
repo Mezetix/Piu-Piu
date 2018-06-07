@@ -40,7 +40,7 @@ void ALadicaBase::SetupLadica(UStaticMeshComponent * ladica)
 {
 	LadicaMesh = ladica;
 	LadicaManeverThrustComponent->SetUpMesh(ladica);
-
+	setup = true;
 	UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - setting up LadicaMesh, LadicaManeverThrustComponent"), *(this->GetName()));
 }
 
@@ -95,16 +95,23 @@ void ALadicaBase::PitchUpBase(float value)
 void ALadicaBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (LadicaMainThrusters)
-	{
-		LadicaMainThrusters->Thrust(DeltaTime);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaMainThrusters je null u ticku"), *(this->GetName()));
-	}
+	
 }
 
+void ALadicaBase::MojTick()
+{
+	if (LadicaMainThrusters)
+		{
+			if (setup)
+			{
+				LadicaMainThrusters->Thrust();
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaMainThrusters je null u ticku"), *(this->GetName()));
+		}
+}
 // Called to bind functionality to input
 void ALadicaBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

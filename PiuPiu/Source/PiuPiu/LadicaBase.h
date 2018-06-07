@@ -24,6 +24,9 @@ public:
 
 private:
 
+
+	bool setup = false;
+
 	//Local reference of the guns - rabmo za strelanje
 	UDeffGun * DefGunLeft = nullptr;
 	UDeffGun * DefGunRight = nullptr;
@@ -72,6 +75,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void PitchUpBase(float value);
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void MojTick();
 
 public:	
 	// Called every frame

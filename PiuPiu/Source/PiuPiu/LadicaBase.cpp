@@ -17,8 +17,7 @@ ALadicaBase::ALadicaBase()
 
 	LadicaManeverThrustComponent = CreateDefaultSubobject<UManevertThrust>(FName("ManeverThrust"));
 	LadicaManeverThrustComponent->SetupThrusters(this);
-	LadicaMainThrusters = CreateDefaultSubobject<UMainThrusters>(FName("MainThrusters"));
-	LadicaMainThrusters->SetupMainThrusters(this);
+	
 }
 
 // Called when the game starts or when spawned
@@ -95,22 +94,27 @@ void ALadicaBase::PitchUpBase(float value)
 void ALadicaBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+	Thrust();
 }
 
 void ALadicaBase::MojTick()
 {
-	if (LadicaMainThrusters)
-		{
-			if (setup)
-			{
-				LadicaMainThrusters->Thrust();
-			}
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaMainThrusters je null u ticku"), *(this->GetName()));
-		}
+
+	
+// TODO - briši --- verjetnu ne bomo rabl
+	
+}
+void ALadicaBase::Thrust()
+{
+
+	if (GetCurrentThrust() > 0.0f)
+	{
+		FVector fowVec = LadicaMesh->GetForwardVector();
+		FVector FotceToAdd = fowVec * GetCurrentThrust()  * GetWorld()->GetDeltaSeconds();
+
+		LadicaMesh->AddForce(FotceToAdd);
+	}
+
 }
 // Called to bind functionality to input
 void ALadicaBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -234,3 +238,50 @@ void ALadicaBase::Yaw(float value)
 	LadicaManeverThrustComponent->YawRight(value);
 }
 
+
+
+void ALadicaBase::ThrustMax()
+{
+
+	CurrentThrust = MaxThrustersForce;
+
+
+}
+
+void ALadicaBase::ThrustStop()
+{
+
+	CurrentThrust = 0.0f;
+
+
+}
+
+void ALadicaBase::ThrustUpStep()
+{
+
+	CurrentThrust = CurrentThrust + ThrustersStep;
+	if (CurrentThrust > MaxThrustersForce)
+	{
+		CurrentThrust = MaxThrustersForce;
+	}
+
+
+
+}
+
+void ALadicaBase::ThrustDownStep()
+{
+	CurrentThrust = CurrentThrust - ThrustersStep;
+	if (CurrentThrust < 0.0f)
+	{
+		CurrentThrust = 0.0f;
+	}
+
+
+
+}
+
+float ALadicaBase::GetCurrentThrust()
+{
+	return CurrentThrust;
+}

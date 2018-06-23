@@ -10,7 +10,7 @@ class UDeffGun;
 class AProjectile;
 class UManeverTrusters;
 class UManevertThrust;
-class UMainThrusters;
+
 
 UCLASS()
 class PIUPIU_API ALadicaBase : public APawn
@@ -35,6 +35,16 @@ private:
 	// za AI za obracat
 	UManeverTrusters* ManeverThrusters = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		float MaxThrustersForce = 50000000.0;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		float ThrustersStep = 5000000.0;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		float CurrentThrust = 0.0f;
+
+
 	// Za obraèanje u AI
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float MaxDegreesPerSecond = 20;
@@ -49,7 +59,7 @@ protected:
 
 
 	UManevertThrust* LadicaManeverThrustComponent = nullptr;
-	UMainThrusters* LadicaMainThrusters = nullptr;
+	
 
 	// Must call in constructor
 	UFUNCTION(BlueprintCallable, Category = "Setup")
@@ -64,6 +74,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		ALadicaBase* GetLadica() { return this; }
 
+
+
+	// Movment funkcije
+
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void MoveUpBase(float value);
 
@@ -73,11 +87,33 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void MoveFrontBase(float value);
 
+
+	// n vem  TODO zbris èe se ne uporabla
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void PitchUpBase(float value);
 
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void MojTick();
+
+
+	// MAinThrust Funkcija
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void Thrust();
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void ThrustMax();
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void ThrustStop();
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void ThrustUpStep();
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void ThrustDownStep();
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		float GetCurrentThrust();
 
 public:	
 	// Called every frame

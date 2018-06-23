@@ -46,10 +46,10 @@ protected:
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-		float MaxThrustersForce = 50000.0f;
+		float MaxThrustersForce = 50000000.0;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-		float ThrustersStep = 5000.0f;
+		float ThrustersStep = 5000000.0;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		float CurrentThrust = 0.0f;

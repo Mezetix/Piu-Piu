@@ -90,6 +90,26 @@ void ALadicaBase::PitchUpBase(float value)
 	LadicaManeverThrustComponent->PitchUp(value);
 }
 
+void ALadicaBase::YawRightBase(float value)
+{
+	if (!LadicaManeverThrustComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		return;
+	}
+	LadicaManeverThrustComponent->YawRight(value);
+}
+
+void ALadicaBase::RollRightBase(float value)
+{
+	if (!LadicaManeverThrustComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		return;
+	}
+	LadicaManeverThrustComponent->RollRight(value);
+}
+
 // Called every frame
 void ALadicaBase::Tick(float DeltaTime)
 {

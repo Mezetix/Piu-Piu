@@ -91,6 +91,11 @@ protected:
 	// n vem  TODO zbris èe se ne uporabla
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void PitchUpBase(float value);
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void YawRightBase(float value);
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void RollRightBase(float value);
+
 
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void MojTick();

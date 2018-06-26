@@ -6,6 +6,11 @@
 
 
 
+float UManevertThrust::GetMaxSideRotation()
+{
+	return MaxSideRotation;
+}
+
 void UManevertThrust::SetupThrusters(ALadicaBase * LadicaBase)
 {
 	Ladica = LadicaBase;
@@ -102,8 +107,14 @@ void UManevertThrust::MoveFront(float value)
 void UManevertThrust::PitchUp(float value)
 {
 
-
-
+	if (value>1.0f)
+	{
+		value = 1.0;
+	}
+	if (value < -1.0f)
+	{
+		value = -1.0f;
+	}
 	//Ladica->AddControllerPitchInput(value);
 
 
@@ -118,6 +129,16 @@ void UManevertThrust::PitchUp(float value)
 }
 void UManevertThrust::RollRight(float value)
 {
+
+
+	if (value>1.0f)
+	{
+		value = 1.0;
+	}
+	if (value < -1.0f)
+	{
+		value = -1.0f;
+	}
 	FRotator rotation;
 	rotation.Pitch = 0.0f;
 	rotation.Yaw = 0.0f;
@@ -129,6 +150,16 @@ void UManevertThrust::RollRight(float value)
 }
 void UManevertThrust::YawRight(float value)
 {
+
+	if (value>1.0f)
+	{
+		value = 1.0;
+	}
+	if (value < -1.0f)
+	{
+		value = -1.0f;
+	}
+
 	FRotator rotation;
 
 	rotation.Pitch = 0.0f;

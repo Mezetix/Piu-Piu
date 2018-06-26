@@ -54,6 +54,11 @@ public:
 		void YawRight(float value);
 
 
+
+	UFUNCTION(BlueprintCallable, Category = "Getter")
+		float GetMaxSideRotation();
+
+
 // u construktorju doloèmo parent ladjo
 	void SetupThrusters(ALadicaBase* LadicaBase);
 // Called every frame

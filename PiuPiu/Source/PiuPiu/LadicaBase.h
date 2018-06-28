@@ -32,6 +32,14 @@ private:
 	UDeffGun * DefGunRight = nullptr;
 
 
+	//Za turning trusterje
+
+	USceneComponent* FrontPoint;
+	USceneComponent* BackPoint;
+	USceneComponent* LeftPoint;
+	USceneComponent* RightPoint;
+
+
 	// za AI za obracat
 	UManeverTrusters* ManeverThrusters = nullptr;
 
@@ -49,6 +57,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float MaxDegreesPerSecond = 20;
 	
+	// force in newtons  - tone * 10 TODO - prevec... skor pol mejn mora bit... 
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		float MaxSideForce = 50000000.0f;
 
 	UStaticMeshComponent* LadicaMesh;
 

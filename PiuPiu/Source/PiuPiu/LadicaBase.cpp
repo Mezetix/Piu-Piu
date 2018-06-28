@@ -14,6 +14,50 @@ ALadicaBase::ALadicaBase()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//LadicaMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Ladica"));
+	//LadicaMesh->AddToRoot();
+	
+	//FVector pozicija;
+	//pozicija.X = 300.0f;
+	//pozicija.Y = 0.0f;
+	//pozicija.Z = 0.0f;
+
+	
+
+	
+
+	//pozicija.X = 0.0f;
+	//pozicija.Y = -300.0f;
+	//pozicija.Z = 0.0f;
+
+	//LeftPoint->SetRelativeLocation(pozicija);
+
+	//pozicija.Y = 300.0f;
+
+
+	//FrontPoint = CreateDefaultSubobject<USceneComponent>(FName("FrontPoint"));
+
+	//FrontPoint->SetRelativeLocation(pozicija);
+	//FrontPoint->AttachTo(LadicaMesh);
+
+	//BackPoint = CreateDefaultSubobject<USceneComponent>(FName("BackPoint"));
+	//pozicija.X = -300.0f;
+	//BackPoint->SetRelativeLocation(pozicija);
+	//BackPoint->AttachTo(LadicaMesh);
+
+	//LeftPoint = CreateDefaultSubobject<USceneComponent>(FName("LeftPoint"));
+	//pozicija.X = 0.0f;
+	//pozicija.Y = -300.0f;
+	//pozicija.Z = 0.0f;
+	//LeftPoint->SetRelativeLocation(pozicija);
+	//LeftPoint->AttachTo(LadicaMesh);
+
+	//RightPoint = CreateDefaultSubobject<USceneComponent>(FName("RightPoint"));
+	//pozicija.Y = 300.0f;
+	//RightPoint->SetRelativeLocation(pozicija);
+	//RightPoint->AttachTo(LadicaMesh);
+
+	
 
 	LadicaManeverThrustComponent = CreateDefaultSubobject<UManevertThrust>(FName("ManeverThrust"));
 	LadicaManeverThrustComponent->SetupThrusters(this);
@@ -40,6 +84,11 @@ void ALadicaBase::SetupLadica(UStaticMeshComponent * ladica)
 	LadicaMesh = ladica;
 	LadicaManeverThrustComponent->SetUpMesh(ladica);
 	setup = true;
+
+
+	
+
+
 	UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - setting up LadicaMesh, LadicaManeverThrustComponent"), *(this->GetName()));
 }
 
@@ -52,62 +101,158 @@ void ALadicaBase::SetupManeverThrusters(UManeverTrusters * ManeverThrust)
 
 void ALadicaBase::MoveUpBase(float value)
 {
-	if (!LadicaManeverThrustComponent)
+	if (!LadicaMesh)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
 		return;
 	}
-	LadicaManeverThrustComponent->MoveUp(value);
+	if (value > 0 || value < 0)
+	{
+		FVector ForceAplied = LadicaMesh->GetUpVector() * value * MaxSideForce* GetWorld()->GetDeltaSeconds();
+		//FVector NewPos = ForceAplied + Ladica->GetActorLocation();
+		/*Ladica->SetActorLocation(NewPos);
+		APawn* LadicaP = Cast<APawn>(Ladica);*/
+
+		
+		LadicaMesh->AddForce(ForceAplied);
+	}
+	
 }
 
 void ALadicaBase::MoveRightBase(float value)
 {
-	if (!LadicaManeverThrustComponent)
+	if (!LadicaMesh)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
 		return;
 	}
-	LadicaManeverThrustComponent->MoveRight(value);
+	if (value > 0 || value < 0)
+	{
+		FVector ForceAplied = LadicaMesh->GetRightVector() * value * MaxSideForce* GetWorld()->GetDeltaSeconds();
+		//FVector NewPos = ForceAplied + Ladica->GetActorLocation();
+		/*Ladica->SetActorLocation(NewPos);
+		APawn* LadicaP = Cast<APawn>(Ladica);*/
+
+
+		LadicaMesh->AddForce(ForceAplied);
+	}
 }
 
 void ALadicaBase::MoveFrontBase(float value)
 {
-	if (!LadicaManeverThrustComponent)
+	if (!LadicaMesh)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
 		return;
 	}
-	LadicaManeverThrustComponent->MoveFront(value);
+	if (value > 0 || value < 0)
+	{
+		FVector ForceAplied = LadicaMesh->GetForwardVector() * value * MaxSideForce* GetWorld()->GetDeltaSeconds();
+		//FVector NewPos = ForceAplied + Ladica->GetActorLocation();
+		/*Ladica->SetActorLocation(NewPos);
+		APawn* LadicaP = Cast<APawn>(Ladica);*/
+
+
+		LadicaMesh->AddForce(ForceAplied);
+	}
 }
 
 void ALadicaBase::PitchUpBase(float value)
 {
-	if (!LadicaManeverThrustComponent)
+	
+	if (value<-1.0f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		value = -1.0f;
+	}
+	if (value>1.0f)
+	{
+		value = 1.0f;
+	}
+
+
+	if (!LadicaMesh)
+	{
 		return;
 	}
-	LadicaManeverThrustComponent->PitchUp(value);
+	if (value > 0 || value < 0)
+	{
+		FVector ForceAplied = LadicaMesh->GetSocketRotation(FName("PitchUpFront")).Vector() *value * (MaxSideForce / 16) * GetWorld()->GetDeltaSeconds();
+		//FVector NewPos = ForceAplied + Ladica->GetActorLocation();
+		/*Ladica->SetActorLocation(NewPos);
+		APawn* LadicaP = Cast<APawn>(Ladica);*/
+		
+
+		LadicaMesh->AddForceAtLocation(ForceAplied, LadicaMesh->GetSocketLocation(FName("PitchUpFront")));
+		LadicaMesh->AddForceAtLocation(-(ForceAplied), LadicaMesh->GetSocketLocation(FName("PitchUpReare")));
+		//LadicaMesh->AddForce(ForceAplied);
+	}
+
+
+
+	//LadicaManeverThrustComponent->PitchUp(value);
 }
 
 void ALadicaBase::YawRightBase(float value)
 {
-	if (!LadicaManeverThrustComponent)
+	
+	if (value<-1.0f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		value = -1.0f;
+	}
+	if (value>1.0f)
+	{
+		value = 1.0f;
+	}
+
+	if (!LadicaMesh)
+	{
 		return;
 	}
-	LadicaManeverThrustComponent->YawRight(value);
+	if (value > 0 || value < 0)
+	{
+		FVector ForceAplied = LadicaMesh->GetSocketRotation(FName("YawRightFront")).Vector() *value * (MaxSideForce / 16) * GetWorld()->GetDeltaSeconds();
+		
+		//FVector NewPos = ForceAplied + Ladica->GetActorLocation();
+		/*Ladica->SetActorLocation(NewPos);
+		APawn* LadicaP = Cast<APawn>(Ladica);*/
+		
+
+		LadicaMesh->AddForceAtLocation(ForceAplied, LadicaMesh->GetSocketLocation(FName("YawRightFront"))); // isto spredi zadi sam da gre yaw - right vektor
+		LadicaMesh->AddForceAtLocation(-1*(ForceAplied), LadicaMesh->GetSocketLocation(FName("YawRightBack")));
+		//LadicaMesh->AddForce(ForceAplied);
+	}
+
+
+	//LadicaManeverThrustComponent->YawRight(value);
 }
 
 void ALadicaBase::RollRightBase(float value)
 {
-	if (!LadicaManeverThrustComponent)
+
+	if (value<-1.0f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" Ladica %s - LadicaManeverThrustComponent je null"), *(this->GetName()));
+		value = -1.0f;
+	}
+	if (value>1.0f)
+	{
+		value = 1.0f;
+	}
+
+
+	if (!LadicaMesh)
+	{
 		return;
 	}
-	LadicaManeverThrustComponent->RollRight(value);
+	if (value > 0 || value < 0)
+	{
+		FVector ForceAplied = LadicaMesh->GetUpVector() * value * (MaxSideForce / 16) * GetWorld()->GetDeltaSeconds();
+
+		//FVector NewPos = ForceAplied + Ladica->GetActorLocation();
+		/*Ladica->SetActorLocation(NewPos);
+		APawn* LadicaP = Cast<APawn>(Ladica);*/
+
+
+		LadicaMesh->AddForceAtLocation(ForceAplied, LadicaMesh->GetSocketLocation(FName("RollRightLeft"))); // isto spredi zadi sam da gre yaw - right vektor
+		LadicaMesh->AddForceAtLocation(-1 * (ForceAplied), LadicaMesh->GetSocketLocation(FName("RollRightRight")));
+		//LadicaMesh->AddForce(ForceAplied);
+	}
 }
 
 // Called every frame
@@ -220,7 +365,8 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 	// Manever thrusters
 	if (LadicaManeverThrustComponent)
 	{
-		
+		// TODO Ne dela sz novim trusterji u ladica base... fix
+		PitchUpBase(RelativePitch);
 		LadicaManeverThrustComponent->PitchUp(RelativePitch);
 		LadicaManeverThrustComponent->YawRight(RelativeYaw);
 		/*ManeverThrusters->PitchUpAI(RelativePitch, ladica);

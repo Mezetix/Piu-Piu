@@ -82,6 +82,15 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		void SetupManeverThrusters(UManeverTrusters* ManeverThrust);
 
+	
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		ALadicaBase* GetLadica() { return this; }
 
@@ -130,14 +139,8 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		float GetCurrentThrust();
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	UFUNCTION(BlueprintCallable, Category = "Movment")
+		void SetThrust(float Value);
 	UFUNCTION(BlueprintCallable, Category = "Fire")
 	void Fire();
 
@@ -153,5 +156,8 @@ public:
 		TSubclassOf<AProjectile> ProjectileBlueprint;
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float ProjectileSpeed = 1000.0f;
+
+	// Vrne rotacijo ki je potrebna od Foward vektorja proti tarèi (World Coordinate)
+	FRotator AngleToward(FVector tarca);
 	
 };

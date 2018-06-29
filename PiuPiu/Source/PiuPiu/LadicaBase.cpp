@@ -344,8 +344,9 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 	auto DeltaRotator = TarcaAsRotator - LadicaForwardRot; // rotacija ki je potrebna da se obrnes proti tarci
 	
 	
+
 	
-	
+	// obrne smer obraèanja èe je veèje kot pol kroga
 	if((FGenericPlatformMath::Abs(DeltaRotator.Yaw)) >180)
 	{
 		DeltaRotator.Yaw = -DeltaRotator.Yaw; 
@@ -354,7 +355,27 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 
 	if ((FGenericPlatformMath::Abs(DeltaRotator.Pitch)) >90)
 	{
-		DeltaRotator.Yaw = -DeltaRotator.Pitch;
+		DeltaRotator.Pitch = -DeltaRotator.Pitch;
+	}
+
+
+	// upoèasni zavijanje da neha nihat.. TODO - ni uredu... se kr niha pr naglih spremembah kota...
+
+	float BreakeAngle = 35.0f;
+
+	if (FGenericPlatformMath::Abs(DeltaRotator.Pitch) < BreakeAngle)
+	{
+		DeltaRotator.Pitch = DeltaRotator.Pitch / BreakeAngle;
+	}
+	
+	if (FGenericPlatformMath::Abs(DeltaRotator.Yaw) < BreakeAngle)
+	{
+		DeltaRotator.Yaw = DeltaRotator.Yaw / BreakeAngle;
+	}
+	
+	if (FGenericPlatformMath::Abs(DeltaRotator.Roll) < BreakeAngle)
+	{
+		DeltaRotator.Roll = DeltaRotator.Roll / BreakeAngle;
 	}
 
 	float RelativePitch = FMath::Clamp<float>(DeltaRotator.Pitch, -1, +1); // pitch ki je potreben  -- TODO Clamp bi lohk bil u samem manever thrusterju
@@ -362,21 +383,11 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 	float RelativeRoll = FMath::Clamp<float>(DeltaRotator.Roll, -1, +1); // roll je pa tku 0 zmeri... al pa ne
 
 
-	// Manever thrusters
-	if (LadicaManeverThrustComponent)
-	{
-		// TODO Ne dela sz novim trusterji u ladica base... fix
+	
+		
 		PitchUpBase(RelativePitch);
-		LadicaManeverThrustComponent->PitchUp(RelativePitch);
-		LadicaManeverThrustComponent->YawRight(RelativeYaw);
-		/*ManeverThrusters->PitchUpAI(RelativePitch, ladica);
-		ManeverThrusters->YawRightAI(RelativeYaw, ladica);
-		ManeverThrusters->RollRightAI(RelativeRoll, ladica);*/
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("manever thrusters = null n vem zakaj...  "), *(this->GetName()));
-	}
+		YawRightBase(RelativeYaw);
+		RollRightBase(RelativeRoll);
 	
 
 	
@@ -402,6 +413,27 @@ void ALadicaBase::Yaw(float value)
 		return;
 	}
 	LadicaManeverThrustComponent->YawRight(value);
+}
+
+FRotator ALadicaBase::AngleToward(FVector tarca)
+{
+
+	auto ladica = Cast<APawn>(this);
+	FRotator LadicaForwardRot = ladica->GetActorForwardVector().Rotation(); // fow vec od AILadje - rotacija je 0,0,0... 
+
+
+
+
+	FVector PozTarceLocal = tarca - ladica->GetNavAgentLocation();// vector od ladice do tarce
+
+	auto TarcaAsRotator = PozTarceLocal.Rotation(); // Rotacija kjer se nahaja tarca
+
+
+	auto DeltaRotator = TarcaAsRotator - LadicaForwardRot; // rotacija ki je potrebna da se obrnes proti tarci
+
+
+
+	return DeltaRotator;
 }
 
 
@@ -451,3 +483,9 @@ float ALadicaBase::GetCurrentThrust()
 {
 	return CurrentThrust;
 }
+
+void ALadicaBase::SetThrust(float Value)
+{
+	CurrentThrust = Value;
+}
+

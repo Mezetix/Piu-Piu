@@ -13,34 +13,53 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 		auto LadicaBaseAI = Cast<ALadicaBase>(ControledPawn);
 
 
-		auto PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+		/*auto PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 		if (!PlayerPawn) {
 			UE_LOG(LogTemp, Warning, TEXT(" Turn Toward AI %s beh ni najdu playerja "), *(PlayerPawn->GetName()));
 			return EBTNodeResult::Failed;
+		}*/
+		
+		
+		// - TODO dobi tarèo kamr gremo - blackboard stuff verjetnu...
+		FVector Target= FVector(-2810.0f, 12364.0f, 9351.0f); // target 1 na sceni
+
+		FRotator RazlikaKot = LadicaBaseAI->AngleToward(Target); // kot med tarèo in trenutnim hedingom
+
+		float DovoljenKot = 45.0f;
+
+		if (FGenericPlatformMath::Abs(RazlikaKot.Pitch) > DovoljenKot || FGenericPlatformMath::Abs(RazlikaKot.Yaw) > DovoljenKot) // roll ni važn... smo lohk na glavo obrnjeni
+		{
+			// prevelik kot... najprej obrni
+
+			LadicaBaseAI->TurnTowards(Target);
+
+			return EBTNodeResult::InProgress;
+
+
 		}
 
 
-		LadicaBaseAI->TurnTowards(PlayerPawn->GetActorLocation());
+		FVector VecRazdaljaDoTarce = ControledPawn->GetNavAgentLocation() - Target;
+		
+		float razdaljaDoTarce = VecRazdaljaDoTarce.Dist(ControledPawn->GetNavAgentLocation(), Target);
 
-		//TODO - verjetno vrne Bool, èe je vsej prblizn isti kot. Al pa spodi primerjaj in vrni succseed al pa in progres
+		if(razdaljaDoTarce < 10000.0f)
+		{
+			LadicaBaseAI->ThrustStop();
+
+			return EBTNodeResult::Succeeded;
+				
+		}
+
+	
+			LadicaBaseAI->ThrustMax();
+
+			return EBTNodeResult::InProgress;
+
+		
 
 
-		//FRotator curentRot = ControledPawn->GetActorForwardVector().Rotation();
-		//	
-		//FVector curentPoz = ControledPawn->GetActorLocation();
-
-		//auto BlacboardComp = OwnerComp.GetBlackboardComponent();
-		//FVector VTarca = BlacboardComp->GetValueAsVector(Tarca.SelectedKeyName);
-
-		//FVector smerTarce = VTarca - curentPoz;
-		//smerTarce.Normalize();
-		//FRotator smerTarceRot = smerTarce.Rotation();
-
-		//auto deltaRortator = smerTarceRot - curentRot;
-
-		////TODO Preveri kako se tank obrne - kako zraèuna smer kam se mora obrnt... mislem da je aim at();
-
-		return EBTNodeResult::Succeeded;
+	
 
 	
 }

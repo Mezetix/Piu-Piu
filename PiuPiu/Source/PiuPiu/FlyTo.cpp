@@ -21,7 +21,10 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 		
 		
 		// - TODO dobi tarèo kamr gremo - blackboard stuff verjetnu...
-		FVector Target= FVector(-2810.0f, 12364.0f, 9351.0f); // target 1 na sceni
+		FVector Target; // target 1 na sceni
+		Target.X = -273.0f;
+		Target.Y = -12517.0f;
+		Target.Z = 976.0f;
 
 		FRotator RazlikaKot = LadicaBaseAI->AngleToward(Target); // kot med tarèo in trenutnim hedingom
 
@@ -43,7 +46,7 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 		
 		float razdaljaDoTarce = VecRazdaljaDoTarce.Dist(ControledPawn->GetNavAgentLocation(), Target);
 
-		if(razdaljaDoTarce < 10000.0f)
+		if(razdaljaDoTarce < 1000.0f)
 		{
 			LadicaBaseAI->ThrustStop();
 

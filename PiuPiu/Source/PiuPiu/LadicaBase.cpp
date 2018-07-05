@@ -484,6 +484,11 @@ float ALadicaBase::GetCurrentThrust()
 	return CurrentThrust;
 }
 
+float ALadicaBase::GetMaxThrust()
+{
+	return MaxThrustersForce;
+}
+
 void ALadicaBase::SetThrust(float Value)
 {
 	CurrentThrust = Value;

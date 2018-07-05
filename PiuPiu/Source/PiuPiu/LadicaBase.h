@@ -140,6 +140,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		float GetCurrentThrust();
 	UFUNCTION(BlueprintCallable, Category = "Movment")
+		float GetMaxThrust();
+
+	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void SetThrust(float Value);
 	UFUNCTION(BlueprintCallable, Category = "Fire")
 	void Fire();

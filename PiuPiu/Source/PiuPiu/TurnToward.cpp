@@ -33,14 +33,20 @@ EBTNodeResult::Type UTurnToward::ExecuteTask(UBehaviorTreeComponent & OwnerComp,
 
 	FVector PozTarceLocal = PlayerPawn->GetActorLocation() - ControledPawn->GetNavAgentLocation();// vector od ladice do tarce
 
+	
+
 	auto TarcaAsRotator = PozTarceLocal.Rotation(); // Rotacija kjer se nahaja tarca
 
 
 	auto DeltaRotator = TarcaAsRotator - LadicaForwardRot; // rotacija ki je potrebna da se obrnes proti tarci
 
-
-
-														   // obrne smer obraèanja èe je veèje kot pol kroga
+	// za AI - UI Info
+	LadicaBaseAI->Tarca = ControledPawn->GetNavAgentLocation();
+	LadicaBaseAI->Heading = PozTarceLocal;
+	LadicaBaseAI->RotToTarget = DeltaRotator;
+	LadicaBaseAI->CommandName = FName("AI Turn Towards");
+	
+	// obrne smer obraèanja èe je veèje kot pol kroga
 	if ((FGenericPlatformMath::Abs(DeltaRotator.Yaw)) >180)
 	{
 		DeltaRotator.Yaw = -DeltaRotator.Yaw;

@@ -25,6 +25,9 @@ public:
 private:
 
 
+	
+
+
 	bool setup = false;
 
 	//Local reference of the guns - rabmo za strelanje
@@ -94,6 +97,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 		ALadicaBase* GetLadica() { return this; }
 
+	// tarca od AI
+	FVector Tarca;
+	// Kam morem it da pridem do tarèe - local - AI
+	FVector Heading;
+	// rotator do tarèe
+	FRotator RotToTarget;
+	// AI command ime
+	FName CommandName;
 
 
 	// Movment funkcije
@@ -144,6 +155,20 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Movment")
 		void SetThrust(float Value);
+
+
+	// **** AI ****
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		FVector GetTarca();
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		FVector GetHeading();
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		FRotator GetRotToTarget();
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		FName GetCommandName();
+
+
+
 	UFUNCTION(BlueprintCallable, Category = "Fire")
 	void Fire();
 

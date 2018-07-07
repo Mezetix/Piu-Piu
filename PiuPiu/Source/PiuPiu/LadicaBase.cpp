@@ -321,6 +321,8 @@ void ALadicaBase::Fire()
 void ALadicaBase::TurnTowards(FVector TurnDirection)
 {
 	
+	Tarca = TurnDirection;
+
 	auto ladica = Cast<APawn>(this);
 	//auto ladica = this->GetAllChildActors(otroc);
 	if (!ladica)
@@ -338,12 +340,18 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 
 	FVector PozTarceLocal = TurnDirection - ladica->GetNavAgentLocation();// vector od ladice do tarce
 	
+	
+
 	auto TarcaAsRotator = PozTarceLocal.Rotation(); // Rotacija kjer se nahaja tarca
 	
 	
 	auto DeltaRotator = TarcaAsRotator - LadicaForwardRot; // rotacija ki je potrebna da se obrnes proti tarci
 	
-	
+	// za AI - UI Info
+	Tarca = TurnDirection;
+	Heading = PozTarceLocal;
+	RotToTarget = DeltaRotator;
+	CommandName = FName("LadicaBase -> Turn Towards");
 
 	
 	// obrne smer obraèanja èe je veèje kot pol kroga
@@ -492,5 +500,26 @@ float ALadicaBase::GetMaxThrust()
 void ALadicaBase::SetThrust(float Value)
 {
 	CurrentThrust = Value;
+}
+
+FVector ALadicaBase::GetTarca()
+{
+	
+	return Tarca;
+}
+
+FVector ALadicaBase::GetHeading()
+{
+	return Heading;
+}
+
+FRotator ALadicaBase::GetRotToTarget()
+{
+	return RotToTarget;
+}
+
+FName ALadicaBase::GetCommandName()
+{
+	return CommandName;
 }
 

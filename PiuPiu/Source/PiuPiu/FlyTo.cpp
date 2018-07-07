@@ -22,13 +22,24 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 		
 		// - TODO dobi tarèo kamr gremo - blackboard stuff verjetnu...
 		FVector Target; // target 1 na sceni
-		Target.X = -273.0f;
-		Target.Y = -12517.0f;
-		Target.Z = 976.0f;
+		
+		Target.X = -2810.0f;
+		Target.Y = 12364.0f;
+		Target.Z = 9351.0f;
+
+		
 
 		FRotator RazlikaKot = LadicaBaseAI->AngleToward(Target); // kot med tarèo in trenutnim hedingom
+		
 
-		float DovoljenKot = 45.0f;
+		// za AI - UI Info
+		LadicaBaseAI->Tarca = Target;
+		LadicaBaseAI->Heading = Target - ControledPawn->GetNavAgentLocation();
+		LadicaBaseAI->RotToTarget = RazlikaKot;
+		LadicaBaseAI->CommandName = FName("AI Flay To");
+
+
+		float DovoljenKot = 25.0f;
 
 		if (FGenericPlatformMath::Abs(RazlikaKot.Pitch) > DovoljenKot || FGenericPlatformMath::Abs(RazlikaKot.Yaw) > DovoljenKot) // roll ni važn... smo lohk na glavo obrnjeni
 		{
@@ -36,7 +47,7 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 
 			LadicaBaseAI->TurnTowards(Target);
 
-			return EBTNodeResult::InProgress;
+			return EBTNodeResult::Succeeded;
 
 
 		}
@@ -46,7 +57,7 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 		
 		float razdaljaDoTarce = VecRazdaljaDoTarce.Dist(ControledPawn->GetNavAgentLocation(), Target);
 
-		if(razdaljaDoTarce < 1000.0f)
+		if(razdaljaDoTarce < 5000.0f)
 		{
 			LadicaBaseAI->ThrustStop();
 
@@ -54,10 +65,15 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 				
 		}
 
-	
+		if (razdaljaDoTarce < 10000.0f)
+		{
+			LadicaBaseAI->SetThrust(LadicaBaseAI->GetMaxThrust() / 3);
+		}
+		else
+		{
 			LadicaBaseAI->ThrustMax();
-
-			return EBTNodeResult::InProgress;
+		}
+			return EBTNodeResult::Succeeded;
 
 		
 

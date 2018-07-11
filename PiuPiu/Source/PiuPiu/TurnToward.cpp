@@ -44,7 +44,7 @@ EBTNodeResult::Type UTurnToward::ExecuteTask(UBehaviorTreeComponent & OwnerComp,
 	LadicaBaseAI->Tarca = ControledPawn->GetNavAgentLocation();
 	LadicaBaseAI->Heading = PozTarceLocal;
 	LadicaBaseAI->RotToTarget = DeltaRotator;
-	LadicaBaseAI->CommandName = FName("AI Turn Towards");
+	LadicaBaseAI->CommandName = FString("AI Turn Towards");
 	
 	// obrne smer obraèanja èe je veèje kot pol kroga
 	if ((FGenericPlatformMath::Abs(DeltaRotator.Yaw)) >180)

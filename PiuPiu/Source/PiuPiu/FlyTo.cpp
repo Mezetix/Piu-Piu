@@ -3,6 +3,7 @@
 #include "FlyTo.h"
 #include "AIController.h"
 #include "LadicaBase.h"
+#include "PatrolPoint.h"
 
 EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint8 * NodeMemory)
 {
@@ -19,13 +20,11 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 			return EBTNodeResult::Failed;
 		}*/
 		
-		
+		float hitrost = LadicaBaseAI->GetMaxThrust() / 100.0f*LadicaBaseAI->ActivePatrolPoint->GetHitrost();
 		// - TODO dobi tarèo kamr gremo - blackboard stuff verjetnu...
 		FVector Target; // target 1 na sceni
 		
-		Target.X = -2810.0f;
-		Target.Y = 12364.0f;
-		Target.Z = 9351.0f;
+		Target = LadicaBaseAI->ActivePatrolPoint->GetLokacija();
 
 		
 
@@ -36,7 +35,7 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 		LadicaBaseAI->Tarca = Target;
 		LadicaBaseAI->Heading = Target - ControledPawn->GetNavAgentLocation();
 		LadicaBaseAI->RotToTarget = RazlikaKot;
-		LadicaBaseAI->CommandName = FName("AI Flay To");
+		LadicaBaseAI->CommandName = FString("AI Flay To ") + ( LadicaBaseAI->ActivePatrolPoint->GetIme());
 
 
 		float DovoljenKot = 25.0f;
@@ -46,8 +45,8 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 			// prevelik kot... najprej obrni
 
 			LadicaBaseAI->TurnTowards(Target);
-
-			return EBTNodeResult::Succeeded;
+			LadicaBaseAI->ThrustStop();
+			return EBTNodeResult::Failed;
 
 
 		}
@@ -56,22 +55,25 @@ EBTNodeResult::Type UFlyTo::ExecuteTask(UBehaviorTreeComponent & OwnerComp, uint
 		FVector VecRazdaljaDoTarce = ControledPawn->GetNavAgentLocation() - Target;
 		
 		float razdaljaDoTarce = VecRazdaljaDoTarce.Dist(ControledPawn->GetNavAgentLocation(), Target);
-
-		if(razdaljaDoTarce < 5000.0f)
+		LadicaBaseAI->DistToTarget = razdaljaDoTarce;
+		if(razdaljaDoTarce <  LadicaBaseAI->ActivePatrolPoint->GetBlizinaTarce())
 		{
 			LadicaBaseAI->ThrustStop();
 
+			LadicaBaseAI->Fire();// TODO zbrisi... sam za foro
+
+			LadicaBaseAI->NaslednjiPatrolPoint();
 			return EBTNodeResult::Succeeded;
 				
 		}
 
 		if (razdaljaDoTarce < 10000.0f)
 		{
-			LadicaBaseAI->SetThrust(LadicaBaseAI->GetMaxThrust() / 3);
+			LadicaBaseAI->SetThrust(hitrost / 3);
 		}
 		else
 		{
-			LadicaBaseAI->ThrustMax();
+			LadicaBaseAI->SetThrust(hitrost);
 		}
 			return EBTNodeResult::Succeeded;
 

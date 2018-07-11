@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyrigh0t notice in the Description page of Project Settings.
 
 #include "LadicaBase.h"
 #include "DeffGun.h"
@@ -7,6 +7,7 @@
 #include "ManevertThrust.h"
 #include "MainThrusters.h"
 #include "Components/StaticMeshComponent.h"
+#include "PatrolPoint.h"
 
 // Sets default values
 ALadicaBase::ALadicaBase()
@@ -14,48 +15,6 @@ ALadicaBase::ALadicaBase()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//LadicaMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Ladica"));
-	//LadicaMesh->AddToRoot();
-	
-	//FVector pozicija;
-	//pozicija.X = 300.0f;
-	//pozicija.Y = 0.0f;
-	//pozicija.Z = 0.0f;
-
-	
-
-	
-
-	//pozicija.X = 0.0f;
-	//pozicija.Y = -300.0f;
-	//pozicija.Z = 0.0f;
-
-	//LeftPoint->SetRelativeLocation(pozicija);
-
-	//pozicija.Y = 300.0f;
-
-
-	//FrontPoint = CreateDefaultSubobject<USceneComponent>(FName("FrontPoint"));
-
-	//FrontPoint->SetRelativeLocation(pozicija);
-	//FrontPoint->AttachTo(LadicaMesh);
-
-	//BackPoint = CreateDefaultSubobject<USceneComponent>(FName("BackPoint"));
-	//pozicija.X = -300.0f;
-	//BackPoint->SetRelativeLocation(pozicija);
-	//BackPoint->AttachTo(LadicaMesh);
-
-	//LeftPoint = CreateDefaultSubobject<USceneComponent>(FName("LeftPoint"));
-	//pozicija.X = 0.0f;
-	//pozicija.Y = -300.0f;
-	//pozicija.Z = 0.0f;
-	//LeftPoint->SetRelativeLocation(pozicija);
-	//LeftPoint->AttachTo(LadicaMesh);
-
-	//RightPoint = CreateDefaultSubobject<USceneComponent>(FName("RightPoint"));
-	//pozicija.Y = 300.0f;
-	//RightPoint->SetRelativeLocation(pozicija);
-	//RightPoint->AttachTo(LadicaMesh);
 
 	
 
@@ -69,6 +28,71 @@ void ALadicaBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	auto p = GetWorld()->SpawnActor<APatrolPoint>(
+		PatrolPointBlueprint,
+		FVector(10000.0f, 10000.0f, 10000.0f),
+		FRotator(1.0f,1.0f,1.0f)
+		);
+	p->SetLokacija(FVector(10000.0f, 10000.0f, 10000.0f));
+	p->SetBlizinaTarce(5000.0f);
+	p->SetHitrost(100);
+	p->SetIme(FString("Patrol Ena"));
+	
+	PatrolPoints = { p };
+	ActivePatrolPoint = p;
+
+	APatrolPoint* b = Cast<APatrolPoint>(p);
+	
+	PatrolPoints.Init(b,1);
+	
+
+	p = GetWorld()->SpawnActor<APatrolPoint>(
+		PatrolPointBlueprint,
+		FVector(-10000.0f, 10000.0f, 10000.0f),
+		FRotator(1.0f, 1.0f, 1.0f)
+		);
+	p->SetLokacija(FVector(-10000.0f, 10000.0f, 10000.0f));
+	p->SetBlizinaTarce(5000.0f);
+	p->SetHitrost(100);
+	p->SetIme(FString("Patrol Dva"));
+
+	b = Cast<APatrolPoint>(p);
+	PatrolPoints.Push(b);
+
+
+	p = GetWorld()->SpawnActor<APatrolPoint>(
+		PatrolPointBlueprint,
+		FVector(-10000.0f, 10000.0f, 10000.0f),
+		FRotator(1.0f, 1.0f, 1.0f)
+		);
+	p->SetLokacija(FVector(10000.0f, 10000.0f, -10000.0f));
+	p->SetBlizinaTarce(5000.0f);
+	p->SetHitrost(50);
+	p->SetIme(FString("Patrol Tri"));
+
+	b = Cast<APatrolPoint>(p);
+	PatrolPoints.Push(b);
+
+
+
+	p = GetWorld()->SpawnActor<APatrolPoint>(
+		PatrolPointBlueprint,
+		FVector(-10000.0f, 10000.0f, 10000.0f),
+		FRotator(1.0f, 1.0f, 1.0f)
+		);
+	p->SetLokacija(FVector(-10000.0f, 10000.0f, -10000.0f));
+	p->SetBlizinaTarce(5000.0f);
+	p->SetHitrost(20);
+	p->SetIme(FString("Patrol Štiri"));
+
+	b = Cast<APatrolPoint>(p);
+	PatrolPoints.Push(b);
+
+
+
+
+
+	//ActivePatrolPoint=
 }
 
 void ALadicaBase::SetupGuns(UDeffGun* GunLeft, UDeffGun* GunRight)
@@ -288,6 +312,37 @@ void ALadicaBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 }
 
+void ALadicaBase::NaslednjiPatrolPoint()
+{
+	//auto Iretat = PatrolPoints.CreateIterator();
+	int32 size = PatrolPoints.Num();
+	int trenutni;// = PatrolPoints.Max();
+
+	
+
+	PatrolPoints.Find(ActivePatrolPoint, trenutni);
+
+	//size = PatrolPoints.FindLast()
+
+	
+	if (trenutni >= (size-1))
+	{
+		ActivePatrolPoint = PatrolPoints[0];
+	}
+	else
+	{
+		
+		ActivePatrolPoint = PatrolPoints[trenutni + 1];
+
+	}
+
+
+	
+
+	UE_LOG(LogTemp, Warning, TEXT(" NextPatrolPoint... Size = %f trenutni je %f"), size,  trenutni );
+
+}
+
 void ALadicaBase::Fire()
 {
 
@@ -351,7 +406,7 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 	Tarca = TurnDirection;
 	Heading = PozTarceLocal;
 	RotToTarget = DeltaRotator;
-	CommandName = FName("LadicaBase -> Turn Towards");
+	CommandName = FString("LadicaBase -> Turn Towards");
 
 	
 	// obrne smer obraèanja èe je veèje kot pol kroga
@@ -518,8 +573,13 @@ FRotator ALadicaBase::GetRotToTarget()
 	return RotToTarget;
 }
 
-FName ALadicaBase::GetCommandName()
+FString ALadicaBase::GetCommandName()
 {
 	return CommandName;
+}
+
+float ALadicaBase::GetDistToTarget()
+{
+	return DistToTarget;
 }
 

@@ -10,7 +10,7 @@ class UDeffGun;
 class AProjectile;
 class UManeverTrusters;
 class UManevertThrust;
-
+class APatrolPoint;
 
 UCLASS()
 class PIUPIU_API ALadicaBase : public APawn
@@ -104,8 +104,13 @@ public:
 	// rotator do tarèe
 	FRotator RotToTarget;
 	// AI command ime
-	FName CommandName;
+	FString CommandName;
+	// AI razdalja do tarèe
+	float DistToTarget;
 
+	TArray<APatrolPoint*> PatrolPoints;
+
+	APatrolPoint*	ActivePatrolPoint;
 
 	// Movment funkcije
 
@@ -165,9 +170,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		FRotator GetRotToTarget();
 	UFUNCTION(BlueprintCallable, Category = "AI")
-		FName GetCommandName();
+		FString GetCommandName();
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		float GetDistToTarget();
 
 
+	//Next Patrol Point
+	UFUNCTION(BlueprintCallable, Category = "PatrolPoint")
+		void NaslednjiPatrolPoint();
 
 	UFUNCTION(BlueprintCallable, Category = "Fire")
 	void Fire();
@@ -182,6 +192,14 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		TSubclassOf<AProjectile> ProjectileBlueprint;
+	UPROPERTY(EditAnywhere, Category = "Setup")
+		TSubclassOf<APatrolPoint> PatrolPointBlueprint;
+
+
+
+	
+
+
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float ProjectileSpeed = 1000.0f;
 

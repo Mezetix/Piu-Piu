@@ -60,6 +60,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float MaxDegreesPerSecond = 20;
 	
+	
+
+
 	// force in newtons  - tone * 10 TODO - prevec... skor pol mejn mora bit... 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 		float MaxSideForce = 50000000.0f;
@@ -67,6 +70,10 @@ private:
 	UStaticMeshComponent* LadicaMesh;
 
 	
+// Za turn Towards - roll nazaj pokonci
+	bool RollPokonci = false;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -107,6 +114,9 @@ public:
 	FString CommandName;
 	// AI razdalja do tarèe
 	float DistToTarget;
+	// kot med vektorji - za roll --- Up vektorji
+	float KotMedVektorji;
+
 
 	TArray<APatrolPoint*> PatrolPoints;
 
@@ -174,7 +184,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AI")
 		float GetDistToTarget();
 
-
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		float GetKotMedVektorji();
 	//Next Patrol Point
 	UFUNCTION(BlueprintCallable, Category = "PatrolPoint")
 		void NaslednjiPatrolPoint();

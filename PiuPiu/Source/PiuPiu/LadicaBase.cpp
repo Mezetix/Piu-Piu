@@ -402,13 +402,22 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 	
 	auto DeltaRotator = TarcaAsRotator - LadicaForwardRot; // rotacija ki je potrebna da se obrnes proti tarci
 	
+	//FQuat TarcaQuat = TarcaAsRotator.Quaternion();
+	
 	// za AI - UI Info
 	Tarca = TurnDirection;
 	Heading = PozTarceLocal;
 	RotToTarget = DeltaRotator;
 	CommandName = FString("LadicaBase -> Turn Towards");
 
+
+	FVector WorldUpVector = FVector(0.0f, 0.0f, 1.0f);
+	FVector LadicaUpVector = ladica->GetActorUpVector();
+
+
+	KotMedVektorji =LadicaUpVector.DotProduct(WorldUpVector, LadicaUpVector);
 	
+
 	// obrne smer obraèanja èe je veèje kot pol kroga
 	if((FGenericPlatformMath::Abs(DeltaRotator.Yaw)) >180)
 	{
@@ -441,11 +450,30 @@ void ALadicaBase::TurnTowards(FVector TurnDirection)
 		DeltaRotator.Roll = DeltaRotator.Roll / BreakeAngle;
 	}
 
+	if (KotMedVektorji < 0) //// Èe smo 90 stopin stran od WorldUp vektorja - 
+		RollPokonci = true; // se zaèni obraèat
+
+
+	
+
+
+
 	float RelativePitch = FMath::Clamp<float>(DeltaRotator.Pitch, -1, +1); // pitch ki je potreben  -- TODO Clamp bi lohk bil u samem manever thrusterju
 	float RelativeYaw = FMath::Clamp<float>(DeltaRotator.Yaw, -1, +1); // yaw ki je potreben 
 	float RelativeRoll = FMath::Clamp<float>(DeltaRotator.Roll, -1, +1); // roll je pa tku 0 zmeri... al pa ne
 
-
+if (RollPokonci)
+	{
+		RelativeRoll = 1.0f; // TODO èe se mormo postavt pokonc - Roll u desno na Polno ( bi mogu še prej zraèunat a u levo a u desno) zdej gre zmeri desno
+		PitchUpBase((RelativePitch)/6);
+		YawRightBase(RelativeYaw/6);
+		RollRightBase(RelativeRoll);
+		if (KotMedVektorji>0.7f) // èe je kot nazaj po 45 stopinj - po ugasni rolanje
+		{
+			RollPokonci = false;
+		}
+		return;
+}
 	
 		
 		PitchUpBase(RelativePitch);
@@ -581,5 +609,10 @@ FString ALadicaBase::GetCommandName()
 float ALadicaBase::GetDistToTarget()
 {
 	return DistToTarget;
+}
+
+float ALadicaBase::GetKotMedVektorji()
+{
+	return KotMedVektorji;
 }
 
